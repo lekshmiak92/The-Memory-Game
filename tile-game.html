@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>match the tile</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    
+    <style type="text/css">
+      body{
+        background-color: lightgoldenrodyellow;
+        margin: 0px;
+      }
+      .content-wrap{
+        width: 100%;
+        overflow: hidden;
+        text-align: center;
+      }
+      #logo{
+        margin: auto;
+      }
+      .game-area{
+        width: 320px;
+        margin: auto;
+        padding-top: 25px;
+        overflow: hidden;
+      }
+      .tile{
+        width: 90px;
+        height: 90px;
+        float: left;
+        background: lightgreen;
+        border: 4px blue;
+        border-style: ridge;
+        margin: 2px;
+        border-radius: 10px;
+
+      }
+      .tiletext{
+        text-align: center;        
+        padding: 25px;
+        font-weight: bold;
+        font-size: 30px;
+        height: 40px;
+        border-radius: 5px;
+      }
+      /*.tile:focus{
+        background: yellow;
+        color: black;
+      }*/
+      .hidden{
+        visibility: hidden;
+      }
+      .show{
+        visibility: visible;
+      }
+      .match-found{
+        background-color: #f3bb1d;
+        visibility: visible !important;
+        /*color: transparent;*/
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content-wrap">
+      <img id="logo" src="./game-logo.png">
+      <div class="game-area">
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1">a</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2">b</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-3">c</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-4">d</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext show" id="tile-5">*</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-6">a</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-7">c</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-8">d</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-9">b</div></div>
+      </div>
+    </div>
+
+    <script>
+      $(function() {
+        var selectionCount=0;
+        var storedTileCount=0;
+        var chosenTile=0;
+        var tileStack=[];
+        var matchCount=0
+        
+        
+        $('.tile').on("click",tileClicked);
+        
+        // show only 2 tiles at a time 
+        function tileClicked() {
+          chosenTile=$(this).children().attr('id');
+          if (selectionCount>1) {
+            selectionCount=0;
+            $(".tiletext").addClass("hidden");
+            }
+            openTile(chosenTile);
+        }
+
+        //show the selected tile
+        function openTile(chosenTile){
+          if ($(document.getElementById(chosenTile)).hasClass('hidden'))
+          {
+            $(document.getElementById(chosenTile)).removeClass('hidden'); 
+            console.log($(this));
+          }
+          selectionCount++;
+
+          // if (storedTileCount>1) {
+          //   compareTileContent(tileStack);
+          //   storedTileCount=0;
+          //   tileStack.length = 0;
+          // }
+          storeTileContent(chosenTile);
+        }
+
+        // storing the selected tile contents to array
+        function storeTileContent(chosenTile) {
+          tileStack.push(chosenTile);
+          console.log(tileStack);
+          storedTileCount++;
+          if (storedTileCount>1) {
+            compareTileContent(tileStack);
+            storedTileCount=0;
+            tileStack.length = 0;
+          }
+        }
+
+        // comparing the opened tile contents
+        function compareTileContent(tileStack) {
+
+          // if ($('#'+tileStack[0])!= $('#'+tileStack[1])) {
+          //   console.log(sdjhfvu);
+            if ($('#'+tileStack[0]).text()===$('#'+tileStack[1]).text()) {
+              $('#'+tileStack[0]).addClass('match-found');
+              $('#'+tileStack[1]).addClass('match-found');
+              matchCount++
+            }
+          // }
+          
+        }
+        
+
+      });
+    </script>
+  </body>
+</html>
