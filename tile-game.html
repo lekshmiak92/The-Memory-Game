@@ -57,11 +57,15 @@
         visibility: visible !important;
         /*color: transparent;*/
       }
+      .succes{
+        color: maroon;
+      }
     </style>
   </head>
   <body>
     <div class="content-wrap">
       <img id="logo" src="./game-logo.png">
+      <div class="succes hidden"> <h2> Congratulations You found all the matches !! </h2></div>
       <div class="game-area">
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1">a</div></div>
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2">b</div></div>
@@ -82,34 +86,33 @@
         var chosenTile=0;
         var tileStack=[];
         var matchCount=0
+        var no_of_moves=0
         
         
         $('.tile').on("click",tileClicked);
         
         // show only 2 tiles at a time 
         function tileClicked() {
+          no_of_moves++;
           chosenTile=$(this).children().attr('id');
           if (selectionCount>1) {
             selectionCount=0;
             $(".tiletext").addClass("hidden");
-            }
-            openTile(chosenTile);
+            $(".tiletext").removeClass("clicked");
+          }
+          openTile(chosenTile);
         }
 
         //show the selected tile
         function openTile(chosenTile){
-          if ($(document.getElementById(chosenTile)).hasClass('hidden'))
-          {
-            $(document.getElementById(chosenTile)).removeClass('hidden'); 
-            console.log($(this));
+          if (!$(document.getElementById(chosenTile)).hasClass('clicked')) {
+            
+            if ($(document.getElementById(chosenTile)).hasClass('hidden')) {
+              $(document.getElementById(chosenTile)).removeClass('hidden'); 
+              $(document.getElementById(chosenTile)).addClass('clicked');
+            }
           }
           selectionCount++;
-
-          // if (storedTileCount>1) {
-          //   compareTileContent(tileStack);
-          //   storedTileCount=0;
-          //   tileStack.length = 0;
-          // }
           storeTileContent(chosenTile);
         }
 
@@ -118,7 +121,7 @@
           tileStack.push(chosenTile);
           console.log(tileStack);
           storedTileCount++;
-          if (storedTileCount>1) {
+          if (storedTileCount==2) {
             compareTileContent(tileStack);
             storedTileCount=0;
             tileStack.length = 0;
@@ -128,17 +131,16 @@
         // comparing the opened tile contents
         function compareTileContent(tileStack) {
 
-          // if ($('#'+tileStack[0])!= $('#'+tileStack[1])) {
-          //   console.log(sdjhfvu);
-            if ($('#'+tileStack[0]).text()===$('#'+tileStack[1]).text()) {
-              $('#'+tileStack[0]).addClass('match-found');
-              $('#'+tileStack[1]).addClass('match-found');
-              matchCount++
-            }
-          // }
-          
+         if ($('#'+tileStack[0]).text()===$('#'+tileStack[1]).text()) {
+            $('#'+tileStack[0]).addClass('match-found');
+            $('#'+tileStack[1]).addClass('match-found');
+            matchCount++
+          }
+          if (matchCount==4) {
+            $("div.succes").removeClass('hidden');
+            console.log(no_of_moves);
+          }
         }
-        
 
       });
     </script>
