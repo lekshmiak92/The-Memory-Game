@@ -67,15 +67,15 @@
       <img id="logo" src="./game-logo.png">
       <div class="succes hidden"> <h2> Congratulations You found all the matches !! </h2></div>
       <div class="game-area">
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1">a</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2">b</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-3">c</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-4">d</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext show" id="tile-5">*</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-6">a</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-7">c</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-8">d</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-9">b</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-3"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-4"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext show" id="static">*</div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-5"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-6"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-7"></div></div>
+        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-8"></div></div>
       </div>
     </div>
 
@@ -85,11 +85,11 @@
         var storedTileCount=0;
         var chosenTile=0;
         var tileStack=[];
-        var matchCount=0
-        var no_of_moves=0
+        var matchCount=0;
+        var no_of_moves=0;
+        var numArray=[];
         
         
-        $('.tile').on("click",tileClicked);
         
         // show only 2 tiles at a time 
         function tileClicked() {
@@ -141,6 +141,33 @@
             console.log(no_of_moves);
           }
         }
+
+        // generating random numbers for tiles
+        function generateRandomNumbers(){
+          for (var i = 0; i < 4; i++) {
+            numArray[i]= Math.round((Math.random()*100)+1);
+            console.log(numArray);
+          }
+          numArray=numArray.concat(numArray);
+        }
+
+        // randomly sort the generated numbers
+        function randomSort(){
+          numArray.sort(function() { 
+            return 0.5 - Math.random()
+             });
+          for (var i = numArray.length ; i > 0; i--) {
+            $("#tile-"+i).text(numArray[i-1]);
+          }
+        }
+
+        
+
+        
+      generateRandomNumbers();
+      randomSort();
+      $('.tile').on("click",tileClicked);
+
 
       });
     </script>
