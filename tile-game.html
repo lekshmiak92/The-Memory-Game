@@ -19,9 +19,10 @@
       }
       .game-area{
         width: 320px;
-        margin: auto;
+        margin-left: 506px;
         padding-top: 25px;
         overflow: hidden;
+        float: left;
       }
       .tile{
         width: 90px;
@@ -42,10 +43,6 @@
         height: 40px;
         border-radius: 5px;
       }
-      /*.tile:focus{
-        background: yellow;
-        color: black;
-      }*/
       .hidden{
         visibility: hidden;
       }
@@ -59,6 +56,41 @@
       }
       .succes{
         color: maroon;
+      }
+      .click-count{
+        float: left;
+        background: yellowgreen;
+        margin-top: 50px;
+        margin-left: 44px;
+        margin-right: 300px;
+        padding-top: 5px;
+        height: 35px;
+        width: 130px;
+        border: 2px solid darkgrey;
+        border-radius: 10px;
+        font-family: sans-serif;
+        color: white;
+        font-size: 25px;
+      }
+      .reset-button-wrap{
+        float: left;
+        margin-top: 50px;
+        margin-left: 44px;
+        margin-right: 300px;
+        padding-top: 5px;
+        height: 35px;
+        width: 130px;
+      }
+      #reset-button{
+        background: crimson;
+        height: 45px;
+        width: 130px;
+        border-radius: 10px;
+        border: 1px solid;
+        border-color: darkmagenta;
+        font-size: 22px;
+        color: white;
+        font-family: sans-serif;
       }
     </style>
   </head>
@@ -77,6 +109,10 @@
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-7"></div></div>
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-8"></div></div>
       </div>
+      <div class="click-count">0 Clicks</div>
+      <div class="reset-button-wrap">
+        <button id="reset-button">Reset</button>
+      </div>
     </div>
 
     <script>
@@ -86,15 +122,16 @@
         var chosenTile=0;
         var tileStack=[];
         var matchCount=0;
-        var no_of_moves=0;
+        var numberOfMoves=0;
         var numArray=[];
         
         
         
         // show only 2 tiles at a time 
         function tileClicked() {
-          no_of_moves++;
-          chosenTile=$(this).children().attr('id');
+          numberOfMoves++;
+          updateClicksCounter();
+          chosenTile=$(this).children().attr('id');          
           if (selectionCount>1) {
             selectionCount=0;
             $(".tiletext").addClass("hidden");
@@ -105,8 +142,11 @@
 
         //show the selected tile
         function openTile(chosenTile){
-          if (!$(document.getElementById(chosenTile)).hasClass('clicked')) {
+          if ($(document.getElementById(chosenTile)).hasClass('clicked')) {
             
+            return
+          }
+          else{
             if ($(document.getElementById(chosenTile)).hasClass('hidden')) {
               $(document.getElementById(chosenTile)).removeClass('hidden'); 
               $(document.getElementById(chosenTile)).addClass('clicked');
@@ -138,7 +178,7 @@
           }
           if (matchCount==4) {
             $("div.succes").removeClass('hidden');
-            console.log(no_of_moves);
+            console.log(numberOfMoves);
           }
         }
 
@@ -160,13 +200,34 @@
             $("#tile-"+i).text(numArray[i-1]);
           }
         }
+        function updateClicksCounter(){
+         $(".click-count").text(numberOfMoves + " clicks"); 
+        }
 
-        
+        function resetGame(){
+          selectionCount=0;
+          storedTileCount=0;
+          tileStack=[];
+          numArray.length=0;
+          matchCount=0;
+          numberOfMoves=0;
+          $(".tiletext").addClass("hidden");
+          $(".tiletext").removeClass("clicked");
+          $(".tiletext").removeClass("match-found");
+          updateClicksCounter();
+          generateRandomNumbers();
+          randomSort();
 
-        
-      generateRandomNumbers();
-      randomSort();
-      $('.tile').on("click",tileClicked);
+        }
+
+        function startGame(){
+          generateRandomNumbers();
+          randomSort();
+        }
+
+        startGame();
+        $('.tile').on("click",tileClicked);
+        $('#reset-button').on("click",resetGame);
 
 
       });
