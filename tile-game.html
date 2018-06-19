@@ -19,7 +19,6 @@
       }
       .game-area{
         width: 320px;
-        margin-left: 506px;
         padding-top: 25px;
         overflow: hidden;
         float: left;
@@ -54,8 +53,11 @@
         visibility: visible !important;
         /*color: transparent;*/
       }
-      .succes{
+      .success{
         color: maroon;
+      }
+      .success-msg{
+        margin: 0px;
       }
       .click-count{
         float: left;
@@ -92,12 +94,32 @@
         color: white;
         font-family: sans-serif;
       }
+      .timer{
+        float: left;
+        background: yellowgreen;
+        margin-top: 50px;
+        margin-left: 302px;
+        margin-right: 70px;
+        padding-top: 5px;
+        height: 35px;
+        width: 130px;
+        border: 2px solid darkgrey;
+        border-radius: 10px;
+        font-family: sans-serif;
+        color: white;
+        font-size: 25px;
+      }
+      .timer-value{
+        margin: 0px;
+        font-size: 30px;
+      }
     </style>
   </head>
   <body>
     <div class="content-wrap">
       <img id="logo" src="./game-logo.png">
-      <div class="succes hidden"> <h2> Congratulations You found all the matches !! </h2></div>
+      <div class="success hidden"> <h2 class="success-msg"> Congratulations You found all the matches !! </h2></div>
+      <div class="timer"><h1 class="timer-value">0:00:00</h1></div>
       <div class="game-area">
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1"></div></div>
         <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2"></div></div>
@@ -113,6 +135,8 @@
       <div class="reset-button-wrap">
         <button id="reset-button">Reset</button>
       </div>
+      
+      
     </div>
 
     <script>
@@ -124,6 +148,11 @@
         var matchCount=0;
         var numberOfMoves=0;
         var numArray=[];
+        var time=0;
+        var hr=0;
+        var min=0;
+        var sec= 0;
+        var timer;
         
         
         
@@ -143,7 +172,6 @@
         //show the selected tile
         function openTile(chosenTile){
           if ($(document.getElementById(chosenTile)).hasClass('clicked')) {
-            
             return
           }
           else{
@@ -177,8 +205,9 @@
             matchCount++
           }
           if (matchCount==4) {
-            $("div.succes").removeClass('hidden');
+            $("div.success").removeClass('hidden');
             console.log(numberOfMoves);
+            clearInterval(timer);
           }
         }
 
@@ -200,6 +229,7 @@
             $("#tile-"+i).text(numArray[i-1]);
           }
         }
+
         function updateClicksCounter(){
          $(".click-count").text(numberOfMoves + " clicks"); 
         }
@@ -212,17 +242,57 @@
           matchCount=0;
           numberOfMoves=0;
           $(".tiletext").addClass("hidden");
-          $(".tiletext").removeClass("clicked");
-          $(".tiletext").removeClass("match-found");
+          $(".tiletext").removeClass("clicked match-found");
           updateClicksCounter();
           generateRandomNumbers();
           randomSort();
+          resetTimer();
 
         }
 
+
+
+        function timecheck(){
+
+          if (time<18000) {
+            hr= Math.trunc(time/3600);
+            min= Math.trunc((time%3600)/60);
+            sec= time-((hr*3600)+(min*60));
+            min=timeFormat(min);
+            sec=timeFormat(sec);
+            $("h1").text(hr+':'+ min + ":"+ sec);
+            time= time+1;
+          } 
+          else {
+            $("h1").text('timeout');
+          }
+        }
+        function timeFormat(value){
+          if (value<10) {
+            value= "0"+value;
+            return value;
+          }
+          else{
+            return value;
+          }
+          
+        }
+        function resetTimer(){
+          time=0;
+          hr=0;
+          min=0;
+          sec= 0;
+        }
+
+        function startTimer(){
+          resetTimer();
+          timer = setInterval(function(){timecheck()}, 1000);
+        }
+        
         function startGame(){
           generateRandomNumbers();
           randomSort();
+          startTimer();
         }
 
         startGame();
