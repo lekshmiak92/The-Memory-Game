@@ -3,304 +3,36 @@
   <head>
     <title>match the tile</title>
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    
-    <style type="text/css">
-      body{
-        background-color: lightgoldenrodyellow;
-        margin: 0px;
-      }
-      .content-wrap{
-        width: 100%;
-        overflow: hidden;
-        text-align: center;
-      }
-      #logo{
-        margin: auto;
-      }
-      .game-area{
-        width: 320px;
-        padding-top: 25px;
-        overflow: hidden;
-        float: left;
-      }
-      .tile{
-        width: 90px;
-        height: 90px;
-        float: left;
-        background: lightgreen;
-        border: 4px blue;
-        border-style: ridge;
-        margin: 2px;
-        border-radius: 10px;
-
-      }
-      .tiletext{
-        text-align: center;        
-        padding: 25px;
-        font-weight: bold;
-        font-size: 30px;
-        height: 40px;
-        border-radius: 5px;
-      }
-      .hidden{
-        visibility: hidden;
-      }
-      .show{
-        visibility: visible;
-      }
-      .match-found{
-        background-color: #f3bb1d;
-        visibility: visible !important;
-        /*color: transparent;*/
-      }
-      .success{
-        color: maroon;
-      }
-      .success-msg{
-        margin: 0px;
-      }
-      .click-count{
-        float: left;
-        background: yellowgreen;
-        margin-top: 50px;
-        margin-left: 44px;
-        margin-right: 300px;
-        padding-top: 5px;
-        height: 35px;
-        width: 130px;
-        border: 2px solid darkgrey;
-        border-radius: 10px;
-        font-family: sans-serif;
-        color: white;
-        font-size: 25px;
-      }
-      .reset-button-wrap{
-        float: left;
-        margin-top: 50px;
-        margin-left: 44px;
-        margin-right: 300px;
-        padding-top: 5px;
-        height: 35px;
-        width: 130px;
-      }
-      #reset-button{
-        background: crimson;
-        height: 45px;
-        width: 130px;
-        border-radius: 10px;
-        border: 1px solid;
-        border-color: darkmagenta;
-        font-size: 22px;
-        color: white;
-        font-family: sans-serif;
-      }
-      .timer{
-        float: left;
-        background: yellowgreen;
-        margin-top: 50px;
-        margin-left: 302px;
-        margin-right: 70px;
-        padding-top: 5px;
-        height: 35px;
-        width: 130px;
-        border: 2px solid darkgrey;
-        border-radius: 10px;
-        font-family: sans-serif;
-        color: white;
-        font-size: 25px;
-      }
-      .timer-value{
-        margin: 0px;
-        font-size: 30px;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./style-tile-game.css">
   </head>
   <body>
     <div class="content-wrap">
       <img id="logo" src="./game-logo.png">
       <div class="success hidden"> <h2 class="success-msg"> Congratulations You found all the matches !! </h2></div>
-      <div class="timer"><h1 class="timer-value">0:00:00</h1></div>
-      <div class="game-area">
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-1"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-2"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-3"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-4"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext show" id="static">*</div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-5"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-6"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-7"></div></div>
-        <div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-8"></div></div>
+      <div class="temp">
+        <div class="timer"><h1 class="timer-value">0:00:00</h1></div>
+        <div class="game-area"></div>
+        <div class="click-count">0 Clicks</div>
+        <div class="reset-button-wrap">
+          <button id="reset-button">Reset</button>
+        </div>  
       </div>
-      <div class="click-count">0 Clicks</div>
-      <div class="reset-button-wrap">
-        <button id="reset-button">Reset</button>
-      </div>
-      
-      
+
+      <div class="difficulty-modal-wrap">
+        <div class="difficulty-levels">
+          <form action="#">
+            <input type="radio" name="level" value="Trial" checked> Trial<br>
+            <input type="radio" name="level" value="Easy"> Easy<br>
+            <input type="radio" name="level" value="Medium"> Medium<br>
+            <input type="radio" name="level" value="Hard"> Hard<br><br>
+            <input id="submit-button" type="submit">
+          </form>
+        </div>
+      </div> 
+
+
     </div>
 
-    <script>
-      $(function() {
-        var selectionCount=0;
-        var storedTileCount=0;
-        var chosenTile=0;
-        var tileStack=[];
-        var matchCount=0;
-        var numberOfMoves=0;
-        var numArray=[];
-        var time=0;
-        var hr=0;
-        var min=0;
-        var sec= 0;
-        var timer;
-        
-        
-        
-        // show only 2 tiles at a time 
-        function tileClicked() {
-          numberOfMoves++;
-          updateClicksCounter();
-          chosenTile=$(this).children().attr('id');          
-          if (selectionCount>1) {
-            selectionCount=0;
-            $(".tiletext").addClass("hidden");
-            $(".tiletext").removeClass("clicked");
-          }
-          openTile(chosenTile);
-        }
-
-        //show the selected tile
-        function openTile(chosenTile){
-          if ($(document.getElementById(chosenTile)).hasClass('clicked')) {
-            return
-          }
-          else{
-            if ($(document.getElementById(chosenTile)).hasClass('hidden')) {
-              $(document.getElementById(chosenTile)).removeClass('hidden'); 
-              $(document.getElementById(chosenTile)).addClass('clicked');
-            }
-          }
-          selectionCount++;
-          storeTileContent(chosenTile);
-        }
-
-        // storing the selected tile contents to array
-        function storeTileContent(chosenTile) {
-          tileStack.push(chosenTile);
-          console.log(tileStack);
-          storedTileCount++;
-          if (storedTileCount==2) {
-            compareTileContent(tileStack);
-            storedTileCount=0;
-            tileStack.length = 0;
-          }
-        }
-
-        // comparing the opened tile contents
-        function compareTileContent(tileStack) {
-
-         if ($('#'+tileStack[0]).text()===$('#'+tileStack[1]).text()) {
-            $('#'+tileStack[0]).addClass('match-found');
-            $('#'+tileStack[1]).addClass('match-found');
-            matchCount++
-          }
-          if (matchCount==4) {
-            $("div.success").removeClass('hidden');
-            console.log(numberOfMoves);
-            clearInterval(timer);
-          }
-        }
-
-        // generating random numbers for tiles
-        function generateRandomNumbers(){
-          for (var i = 0; i < 4; i++) {
-            numArray[i]= Math.round((Math.random()*100)+1);
-            console.log(numArray);
-          }
-          numArray=numArray.concat(numArray);
-        }
-
-        // randomly sort the generated numbers
-        function randomSort(){
-          numArray.sort(function() { 
-            return 0.5 - Math.random()
-             });
-          for (var i = numArray.length ; i > 0; i--) {
-            $("#tile-"+i).text(numArray[i-1]);
-          }
-        }
-
-        function updateClicksCounter(){
-         $(".click-count").text(numberOfMoves + " clicks"); 
-        }
-
-        function resetGame(){
-          selectionCount=0;
-          storedTileCount=0;
-          tileStack=[];
-          numArray.length=0;
-          matchCount=0;
-          numberOfMoves=0;
-          $(".tiletext").addClass("hidden");
-          $(".tiletext").removeClass("clicked match-found");
-          updateClicksCounter();
-          generateRandomNumbers();
-          randomSort();
-          resetTimer();
-
-        }
-
-
-
-        function timecheck(){
-
-          if (time<18000) {
-            hr= Math.trunc(time/3600);
-            min= Math.trunc((time%3600)/60);
-            sec= time-((hr*3600)+(min*60));
-            min=timeFormat(min);
-            sec=timeFormat(sec);
-            $("h1").text(hr+':'+ min + ":"+ sec);
-            time= time+1;
-          } 
-          else {
-            $("h1").text('timeout');
-          }
-        }
-        function timeFormat(value){
-          if (value<10) {
-            value= "0"+value;
-            return value;
-          }
-          else{
-            return value;
-          }
-          
-        }
-        function resetTimer(){
-          time=0;
-          hr=0;
-          min=0;
-          sec= 0;
-        }
-
-        function startTimer(){
-          resetTimer();
-          timer = setInterval(function(){timecheck()}, 1000);
-        }
-        
-        function startGame(){
-          generateRandomNumbers();
-          randomSort();
-          startTimer();
-        }
-
-        startGame();
-        $('.tile').on("click",tileClicked);
-        $('#reset-button').on("click",resetGame);
-
-
-      });
-    </script>
+    <script type="text/javascript" src="./script-tile-game.js"></script>
   </body>
 </html>

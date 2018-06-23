@@ -1,0 +1,142 @@
+body{
+  background-color: lightgoldenrodyellow;
+  margin: 0px;
+}
+.content-wrap{
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+}
+#logo{
+  margin: auto;
+  height: 110px;
+}
+.temp{
+  margin-left: auto;
+  margin-right: auto;
+  overflow: auto;
+}
+.game-area{
+  width: 320px;
+  padding-top: 25px;
+  overflow: hidden;
+  float: left;
+}
+.tile{
+  width: 90px;
+  height: 90px;
+  float: left;
+  background: lightgreen;
+  border: 4px blue;
+  border-style: ridge;
+  margin: 2px;
+  border-radius: 10px;
+
+}
+.tiletext{
+  text-align: center;        
+  padding: 25px;
+  font-weight: bold;
+  font-size: 30px;
+  height: 40px;
+  border-radius: 5px;
+}
+.hidden{
+  visibility: hidden;
+}
+#static{
+  visibility: visible;
+}
+.match-found{
+  background-color: #f3bb1d;
+  visibility: visible !important;
+  /*color: transparent;*/
+}
+.success{
+  color: maroon;
+}
+.success-msg{
+  margin: 0px;
+}
+.click-count{
+  float: left;
+  background: yellowgreen;
+  margin-top: 50px;
+  margin-left: 44px;
+  /*margin-right: 300px;*/
+  padding-top: 5px;
+  height: 35px;
+  width: 130px;
+  border: 2px solid darkgrey;
+  border-radius: 10px;
+  font-family: sans-serif;
+  color: white;
+  font-size: 25px;
+}
+.reset-button-wrap{
+  float: left;
+  margin-top: 50px;
+  margin-left: 44px;
+  /*margin-right: 300px;*/
+  padding-top: 5px;
+  height: 35px;
+  width: 130px;
+}
+#reset-button{
+  background: crimson;
+  height: 45px;
+  width: 130px;
+  border-radius: 10px;
+  border: 1px solid;
+  border-color: darkmagenta;
+  font-size: 22px;
+  color: white;
+  font-family: sans-serif;
+}
+.timer{
+  float: left;
+  background: yellowgreen;
+  margin-top: 50px;
+  /*m*//*argin-left: 302px;*/
+  margin-right: 44px;
+  padding-top: 5px;
+  height: 35px;
+  width: 130px;
+  border: 2px solid darkgrey;
+  border-radius: 10px;
+  font-family: sans-serif;
+  color: white;
+  font-size: 25px;
+}
+.timer-value{
+  margin: 0px;
+  font-size: 30px;
+}
+
+.difficulty-modal-wrap {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.difficulty-levels {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+form {
+  font-size: 25px;
+  text-align: left;
+}
+#submit-button {
+  margin-left: 240px;
+}
