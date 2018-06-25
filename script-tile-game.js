@@ -13,9 +13,12 @@ $(function() {
   var timer;
   var levelOption = document.getElementsByClassName("difficulty-modal-wrap");
   var submit = document.getElementById("submit-button");
-  var Trial, Easy, Medium, Hard,chosenLevel;
+  var Trial, Easy, Medium, Hard;
+  var chosenLevel=0;
   var numberOfRowAndCol=0;
-  var defaultRowAndCol=3;
+  var defaultRowAndCol="Trial";
+  var totalNoOfTiles=0;
+  var numberOfPairs=0;
 
 
 
@@ -68,7 +71,7 @@ $(function() {
       $('#'+tileStack[1]).addClass('match-found');
       matchCount++
     }
-    if (matchCount==4) {
+    if (matchCount==numberOfPairs) {
       $("div.success").removeClass('hidden');
       console.log(numberOfMoves);
       clearInterval(timer);
@@ -77,18 +80,15 @@ $(function() {
 
   // generating random numbers for tiles
   function generateRandomNumbers(){
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < numberOfPairs; i++) {
       numArray[i]= Math.round((Math.random()*100)+1);
       console.log(numArray);
     }
     numArray=numArray.concat(numArray);
-  }
-
-  // randomly sort the generated numbers
-  function randomSort(){
     numArray.sort(function() { 
       return 0.5 - Math.random()
        });
+    console.log(numArray);
     for (var i = numArray.length ; i > 0; i--) {
       $("#tile-"+i).text(numArray[i-1]);
     }
@@ -109,8 +109,9 @@ $(function() {
     $(".tiletext").removeClass("clicked match-found");
     updateClicksCounter();
     generateRandomNumbers();
-    randomSort();
     resetTimer();
+    $("div.success").addClass('hidden');
+
   }
 
 
@@ -156,7 +157,6 @@ $(function() {
   function startGame(){
 
     generateRandomNumbers();
-    randomSort();
     startTimer();
     $(levelOption).remove();
 
@@ -169,64 +169,62 @@ $(function() {
       }
   }
 
-  function generateTileLayout(numberOfRowAndCol){
-    if (numberOfRowAndCol=="3") {
-      $('div.temp').css('width','53%');
+  function generateTileLayout(chosenLevel){
+    if (chosenLevel==="Trial") {
+      $('div.game-container').css('width','53%');
       for (var i = 1; i < 9; i++) {
         $('div.game-area').append('<div class="tile" tabindex="0"><div class="tiletext hidden" id="tile-'+i+'"></div></div>')
         if (i==4) {
           $('div.game-area').append('<div class="tile" tabindex="0"><div class="tiletext" id="static">*</div></div>')
         }
       }
+      numberOfRowAndCol=3;
+      totalNoOfTiles=9;
+      numberOfPairs=4;
+
+
     }
-    else if (numberOfRowAndCol=="4") {
-      $('div.temp').css('width','60%');
+    else if (chosenLevel==="Easy") {
+      $('div.game-container').css('width','60%');
       $('div.game-area').css('width','408px');
-      tileLayout(16);
+      numberOfRowAndCol=4;
+      totalNoOfTiles=16;
+      numberOfPairs=8;
+      tileLayout(totalNoOfTiles);
     }
-    else if (numberOfRowAndCol=="6") {
-      $('div.temp').css('width','75%');
+    else if (chosenLevel==="Medium") {
+      $('div.game-container').css('width','75%');
       $('div.game-area').css('width','612px');
-      tileLayout(36);
+      numberOfRowAndCol=6;
+      totalNoOfTiles=36;
+      numberOfPairs=18;
+      tileLayout(totalNoOfTiles);
     }
-    else if (numberOfRowAndCol=="8") {
-      $('div.temp').css('width','90%');
+    else if (chosenLevel==="Hard") {
+      $('div.game-container').css('width','90%');
       $('div.game-area').css('width','816px');
-      tileLayout(64);
+      numberOfRowAndCol=8;
+      totalNoOfTiles=64;
+      numberOfPairs=32;
+      tileLayout(totalNoOfTiles);
     }
 
   }
-  function findNumberOfRowAndCol(chosenLevel){
-    console.log(chosenLevel)
-    if(chosenLevel==="Trial"){
-      numberOfRowAndCol=3
-    }
-    else if (chosenLevel==="Easy"){
-      numberOfRowAndCol=4;
-    }
-    else if (chosenLevel==="Medium") {
-      numberOfRowAndCol=6;
-      console.log(numberOfRowAndCol)
-    } 
-    else if(chosenLevel==="Hard"){
-      numberOfRowAndCol=8;
-    }
-  }
+
   function clearCurrentLayout(){
     $('div.game-area').text("");
   }
   function chooseDifficulty(){
     chosenLevel=$("input[name='level']:checked").val();
     console.log(chosenLevel);
-    findNumberOfRowAndCol(chosenLevel);
     clearCurrentLayout();
-    generateTileLayout(numberOfRowAndCol);
+    generateTileLayout(chosenLevel);
     startGame();
   }
   generateTileLayout(defaultRowAndCol);
   $(levelOption).show();
   $(submit).on("click",chooseDifficulty);
-  $('.tile').on("click",revealOnlyTwoTiles);
+  $('div.game-area').on("click",".tile",revealOnlyTwoTiles);
   $('#reset-button').on("click",resetGame);
 
 });
