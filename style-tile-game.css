@@ -126,17 +126,24 @@ body{
 }
 
 .difficulty-levels {
-  background-color: #fefefe;
+  background-color: #480035;
   margin: auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 2px solid #752290;
   width: 40%;
 }
 
 form {
   font-size: 25px;
   text-align: left;
+  color: papayawhip;
+  font-family: sans-serif;
+  font-style: italic;
 }
 #submit-button {
   margin-left: 240px;
+  height: 30px;
+  width: 70px;
+  border-radius: 30%;
+  background-color: papayawhip;
 }
